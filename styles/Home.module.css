@@ -3,7 +3,7 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 6rem;
+  padding: 5rem;
   min-height: 100vh;
 }
 
@@ -32,6 +32,18 @@
   background-color: rgba(var(--callout-rgb), 0.5);
   border: 1px solid rgba(var(--callout-border-rgb), 0.3);
   border-radius: var(--border-radius);
+}
+
+.mainnav ul{
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.mainnav ul li{
+  margin: 0 24px;
+  list-style-type: none;
+  font-weight: bold;
 }
 
 .code {
