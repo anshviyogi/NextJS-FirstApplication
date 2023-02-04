@@ -1,32 +1,46 @@
-import React from "react";
-import Link from 'next/link'
+import React, { useEffect } from "react";
+import Link from "next/link";
+import { useState } from "react";
 
-function blog() {
+function blog(props) {
+  const [blogs, setBlogs] = useState(props.data);
+  console.log(props)
+
+  // useEffect(() => {
+    // fetch()...
+  // }, []);
+  
   return (
     <div>
-      <div className="text-center mt-10 cursor-pointer">
-        <Link href={`/blogpost/learn-javascript`}>
-        <h2 className="text-2xl font-bold">How to learn JavaScript in 2022?</h2>
-        </Link>
-        <p>JavaScript is the language used to design logic for the web</p>
-      </div>
-
-      <div className="text-center mt-10 cursor-pointer">
-        <h2 className="text-2xl font-bold">How to learn JavaScript in 2022?</h2>
-        <p>JavaScript is the language used to design logic for the web</p>
-      </div>
-
-      <div className="text-center mt-10 cursor-pointer">
-        <h2 className="text-2xl font-bold">How to learn JavaScript in 2022?</h2>
-        <p>JavaScript is the language used to design logic for the web</p>
-      </div>
-
-      <div className="text-center mt-10 cursor-pointer">
-        <h2 className="text-2xl font-bold">How to learn JavaScript in 2022?</h2>
-        <p>JavaScript is the language used to design logic for the web</p>
-      </div>
+      {blogs.map((blog,key) => (
+        <div key={key} className="text-center mt-10 cursor-pointer">
+          <Link href={`/blogpost/${blog.slug}`}>
+            <h2 className="text-2xl font-bold">
+              {blog.title}
+            </h2>
+          </Link>
+          <p className="px-10 md:px-32">{blog.content}</p>
+        </div>
+      ))}
     </div>
   );
 }
 
+// export async function getServerSideProps(context) {
+//   const fetchedData = await fetch("http://localhost:3000/api/blogs")
+//   let myprops = await fetchedData.json()
+  
+//   return {
+//     props: {data:myprops}, // will be passed to the page component as props
+//   }
+// }
+
+export async function getStaticProps(context) {
+    const fetchedData = await fetch("http://localhost:3000/api/blogs")
+    let myprops = await fetchedData.json()
+    
+    return {
+      props: {data:myprops}, // will be passed to the page component as props
+    }
+  }
 export default blog;

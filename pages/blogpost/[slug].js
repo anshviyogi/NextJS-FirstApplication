@@ -1,7 +1,7 @@
 import React from 'react'
 import {useRouter} from 'next/router'
 
-function slug() {
+function slug(props) {
     const router = useRouter()
     // Parameter after the folder name. Example: http://localhost:3000/blogpost/ansh
     // console.log(router.query)  -- slug
@@ -18,6 +18,31 @@ function slug() {
         </div>
     </div>
   )
+}
+
+// export async function getServerSideProps(context) {
+//   const data = await fetch(`http://localhost:3000/api/getBlog?slug=${context.query.slug}`)
+//   const jsonData = await data.json()
+  
+//   return {
+//     props: {jsonData}, // will be passed to the page component as props
+//   }
+// }
+
+export async function getStaticPaths() {
+  return {
+    paths: [{ params: { slug: "how-to-learn-flask"} },{ params: { slug: "how-to-learn-js"} },{ params: { slug: "how-to-learn-nextjs"} }],
+    fallback: true,
+  }
+}
+
+export async function getStaticProps(context) {
+  const data = await fetch(`http://localhost:3000/api/getBlog?slug=${context.query.slug}`)
+  const jsonData = await data.json()
+  
+  return {
+    props: {jsonData}, // will be passed to the page component as props
+  }
 }
 
 export default slug
