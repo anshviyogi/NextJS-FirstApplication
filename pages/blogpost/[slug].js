@@ -1,7 +1,8 @@
 import React from 'react'
 import {useRouter} from 'next/router'
+import fs from 'fs'
 
-function slug(props) {
+function Slug(props) {
     const router = useRouter()
     // Parameter after the folder name. Example: http://localhost:3000/blogpost/ansh
     // console.log(router.query)  -- slug
@@ -14,11 +15,13 @@ function slug(props) {
         <hr />
 
         <div className='px-52 p-6'>
-          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+          <p>{props.myBlog.content}</p>
         </div>
     </div>
   )
 }
+
+// ------------ Server Side Props ----------
 
 // export async function getServerSideProps(context) {
 //   const data = await fetch(`http://localhost:3000/api/getBlog?slug=${context.query.slug}`)
@@ -29,20 +32,27 @@ function slug(props) {
 //   }
 // }
 
-export async function getStaticPaths() {
-  return {
-    paths: [{ params: { slug: "how-to-learn-flask"} },{ params: { slug: "how-to-learn-js"} },{ params: { slug: "how-to-learn-nextjs"} }],
-    fallback: true,
+// -------------- Static Site Props --------------
+
+export async function getStaticPaths(){ // how many pages make to be made using "slug"
+  return{
+    paths: [
+      {params: {slug:"how-to-learn-flask"}},
+      {params: {slug:"how-to-learn-js"}},
+      {params: {slug:"how-to-learn-nextjs"}},
+    ],
+    fallback:true
   }
 }
 
 export async function getStaticProps(context) {
-  const data = await fetch(`http://localhost:3000/api/getBlog?slug=${context.query.slug}`)
-  const jsonData = await data.json()
-  
+  const {slug} = context.params;
+
+  let myBlog = await fs.promises.readFile(`blogdata/${slug}.json`,'utf-8')
+
   return {
-    props: {jsonData}, // will be passed to the page component as props
+    props: {myBlog: JSON.parse(myBlog)}, // will be passed to the page component as props
   }
 }
 
-export default slug
+export default Slug
